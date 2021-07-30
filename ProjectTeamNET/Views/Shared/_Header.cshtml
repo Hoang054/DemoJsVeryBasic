@@ -1,0 +1,22 @@
+﻿<header>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary sticky-top flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="/Menu"><i class="fa fa-home"></i> 工数管理システム</a>
+        <div class="collapse navbar-collapse" id="navmenu1">
+            <div class="navbar-nav">
+                <span class="form-control-menu">@ViewBag.Title</span>
+            </div>
+        </div>
+        <ul class="navbar-nav px-3 d-flex align-items-center">
+            <li class="nav-item text-nowrap">
+                <button type="button" class="btn btn-light"><i class="fas fa-backward"></i> 戻る</button>
+            </li>
+            <li><span class="form-control-user">テスト太郎さん</span></li>
+            <li class="nav-item text-nowrap">
+                <button type="button" class="btn btn-light" 
+                        onclick="if (confirm('システムを終了しますか？')) {window.location = origin + '/Login/Logout';}">ログアウト 
+                        <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</header>

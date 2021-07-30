@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root SYSTEM "Query.dtd">
+
+<root>
+  <query id="SelectManhourData">
+	  select
+	  t1.*
+	  , t2.user_name
+	  , t3.theme_name1
+    , t3.theme_name2
+	  , t4.work_contents_code_name
+	  from
+	  t_manhour AS t1
+	  inner join m_user As t2
+	  on t2.user_no = t1.user_no
+	  inner join m_theme AS t3
+	  on t3.theme_no = t1.theme_no
+	  inner join m_work_contents as t4
+		on t1.work_contents_code = t4.work_contents_code and t1.work_contents_class = t4.work_contents_class
+
+	  where
+	  1 = 1
+	  <addif key="Year" > 
+								and t1.YEAR = :Year
+						</addif>
+						<addif key="Month" >
+								and t1.Month = :Month
+						</addif>
+							<addif key="Group" > 
+								and t1.group_code = :Group
+						</addif>
+							<addif key="User" > 
+								and t1.user_no = :User
+						</addif>
+  </query>
+	<query id="SelectFunctionClass">
+    select distinct(u2.function_class ), u2.screen_url
+		from m_user as u1 
+				inner join m_role as u2 on u1.role_code = u2.role_code
+		where u2.screen_url='ManhourUpdate'
+			<addif key ="user_no">
+					and u1.user_no = :user_no
+			</addif>		
+  </query>
+  
+  <query id="SelectHistoryManhourUpdate">
+    select * 
+    from m_user_screen_item as u 
+    where
+    screen_url = 'ManhourUpdate' 
+    <addif key ="user_no">
+					and u.user_no = :user_no
+		</addif>
+    order by u.screen_item
+  </query>
+	<query id="SelectHoliday">
+		SELECT
+			tem.DayConver 
+		FROM
+			( 
+					SELECT DISTINCT
+							(cal.date)
+							, cal.horiday
+							, u.user_no
+							, u.site_code
+							, u.group_code
+							, date_part('year', cal.date) as YearConver
+							, date_part('month', cal.date) as MonthConver
+							, date_part('day', cal.date) as DayConver
+					FROM
+							public.m_calendar as cal Join public.m_user as U 
+									ON U.site_code = cal.site_code
+									inner join t_manhour as m on U.user_no = m.user_no 
+			) as tem 
+		where
+				tem.horiday = true
+				<addif key="Year" > 
+						and tem.YearConver = :Year
+				</addif>
+				<addif key="Month" >
+						and tem.MonthConver = :Month
+				</addif>
+					<addif key="Group" > 
+						and tem.group_code = :Group
+				</addif>
+					<addif key="User" > 
+						and tem.user_no = :User
+				</addif>
+	</query>
+  <query id ="InsertUserScreenItems">
+    INSERT
+    INTO public.m_user_screen_item(
+    surrogate_key
+    , user_no
+    , screen_url
+    , screen_item
+    , screen_input
+    , save_name
+    )
+    VALUES (:Surrogate_key ,:User_no , :Screen_url , :Screen_item , :Screen_input , :Save_name );
+  </query>
+  <query id="UpdateManhour">
+		
+		UPDATE	t_manhour
+	    SET		day1 = :Day1, day2 =:Day2, day3 = :Day3,day4 =:Day4,day5 = :Day5,day6 =:Day6,day7 = :Day7,day8 =:Day8,day9 = :Day9,day10 =:Day10,
+				day11 =:Day11, day12 =:Day12,day13 = :Day13,day14 =:Day14,day15 = :Day15,day16 =:Day16,day17 = :Day17,day18 =:Day18,day19 = :Day19,day20 =:Day20,
+				day21 =:Day21,day22 =:Day22,day23 =:Day23,day24 =:Day24,day25 =:Day25,day26 =:Day26,day27 =:Day27,day28 =:Day28,day29 =:Day29,day30 =:Day30,day31 =:Day31,
+			
+				pin_flg =:Pin_flg,total =:Total, fix_date =:Fix_date
+		
+		WHERE
+				year = :Year
+			AND
+				month = :Month
+			AND
+				user_no = :User_no
+			AND
+				Theme_no = :Theme_no
+			AND
+				work_contents_class = :Work_contents_class
+			AND
+				work_contents_code = :Work_contents_code
+			AND
+				work_contents_detail = :Work_contents_detail
+	</query>
+  <query id="UpdateUserScreenItemTheme">
+
+    UPDATE  m_user_screen_item
+    SET     screen_input =:ScreenInput
+    WHERE
+    screen_url =:ScreenUrl
+    AND
+    user_no =:UserNo
+    AND
+    screen_item = :ScreenItem
+  </query>
+  <query id="SelectHistoryThemeSelected">
+
+    SELECT
+    *
+    FROM
+    m_theme
+    WHERE
+    1=1
+    <addif key="ThemeNo" >
+      AND  theme_no = :ThemeNo
+    </addif>
+    <addif key="ThemeName" >
+      AND theme_name1 like :ThemeName OR theme_name2 like :ThemeName
+    </addif>
+    <addif key="SoldFlg" >
+      AND  sold_flg = :SoldFlg
+    </addif>
+    <addif key="GroupCode" >
+      AND accounting_group_code = :GroupCode
+    </addif>
+    <addif key="ObjectCode" >
+      AND sales_object_code = :ObjectCode
+    </addif>
+
+  </query>
+  <query id="CheckExist">
+    select  *
+    from
+    t_manhour
+    where
+    <addif key="Year" >
+      year = :Year
+    </addif>
+    <addif key="Month" >
+      and month = :Month
+    </addif>
+    <addif key="User_no" >
+      and user_no = :User_no
+    </addif>
+    <addif key="Theme_no" >
+      and theme_no = :Theme_no
+    </addif>
+    <addif key="Work_contents_class" >
+      and work_contents_class = :Work_contents_class
+    </addif>
+    <addif key="Work_contents_code" >
+      and work_contents_code = :Work_contents_code
+    </addif>
+    <addif key="Work_contents_detail" >
+      and work_contents_detail = :Work_contents_detail
+    </addif>	
+  </query>
+  <query id="SelectWorkContent">
+
+		SELECT DISTINCT work_contents_code, work_contents_code_name  
+		FROM			m_work_contents
+		ORDER BY		work_contents_code
+
+	</query>
+   <query id="CheckImport">
+    select  *
+    from
+    t_manhour
+    where
+    <addif key="Year" >
+      year = :Year
+    </addif>
+    <addif key="Month" >
+      and month = :Month
+    </addif>
+    <addif key="User_no" >
+      and user_no = :User_no
+    </addif>
+    <addif key="Theme_no" >
+      and theme_no = :Theme_no
+    </addif>   
+    <addif key="Work_contents_code" >
+      and work_contents_code = :Work_contents_code
+    </addif>
+    <addif key="Work_contents_detail" >
+      and work_contents_detail = :Work_contents_detail
+    </addif>	
+  </query>
+   
+  <query id="SelectUser">
+    select * 
+    from m_user
+    where
+    <addif key="userNo" >
+       user_no = :userNo
+    </addif>
+  </query>
+  
+<query id="SelectWordContenClass">
+     select work_contents_class 
+      from m_theme
+      where
+      <addif key="themeNo" >
+        theme_no = :themeNo
+      </addif>   
+  </query>
+</root>

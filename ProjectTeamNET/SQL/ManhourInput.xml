@@ -1,0 +1,321 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root SYSTEM "Query.dtd">
+
+<root>
+	<!-- メニュー情報取得 -->
+
+	<query id="SelectManhourDatas">
+
+		SELECT
+				t1.*
+				,t2.theme_name1
+				,t2.theme_name2
+				,t3.work_contents_class_name
+				,t4.work_contents_code_name
+		FROM	t_manhour AS t1
+				JOIN m_theme AS t2				ON t1.theme_no = t2.theme_no
+				JOIN m_work_contents_class t3	ON t1.work_contents_class = t3.work_contents_class
+				JOIN m_work_contents t4			ON t1.work_contents_class = t4.work_contents_class and t1.work_contents_code = t4.work_contents_code
+		WHERE
+					1 = 1
+				<addif key="Year" > 
+					AND t1.YEAR = :Year
+				</addif>    
+				<addif key="Month" >
+					AND t1.Month = :Month
+				</addif>
+				<addif key="User_no" > 
+					 AND t1.user_no = :User_no
+				</addif>
+		ORDER BY
+				t1.theme_no
+	</query>
+
+	<query id="SelectManhour">
+
+		SELECT
+		t1.year
+		,t1.month
+		,t1.user_no
+		,t1.theme_no
+		FROM	t_manhour AS t1
+		WHERE
+			1=1
+			AND t1.year = :Year
+
+			AND t1.month = :Month
+
+			AND t1.user_no = :User_no
+
+			AND t1.theme_no = :Theme_no
+	</query>
+	
+	<query id="SelectScreenItem">
+		SELECT 
+			*
+		FROM 
+			m_user_screen_item
+		WHERE 
+					1=1
+			<addif key="User_no" > 
+				AND   user_no = :User_no
+            </addif> 
+		
+			<addif key="Screen_url" > 
+				AND screen_url = :Screen_url
+			</addif> 
+	</query>
+
+	<query id="SelectPinTheme">
+		<![CDATA[
+		SELECT
+				t1.user_no
+				,t1.year
+				,t1.month
+				,t1.group_code
+				,t1.site_code
+				,t1.theme_no
+				,t1.work_contents_class
+				,t1.work_contents_code
+				,t1.work_contents_detail
+		FROM
+				t_manhour t1
+				JOIN m_theme t2
+				ON t1.theme_no = t2.theme_no
+		WHERE
+			1=1
+		AND
+			t1.year = :Year
+		AND
+			t1.month = :Month
+		AND
+			t1.pin_flg = true
+		AND
+			t1.user_no = :User_no
+		order by
+			t2.theme_no
+    ]]>
+	</query>	
+	
+	<query id="SelectHistoryTheme">
+
+		SELECT
+			*
+		FROM 
+			m_theme
+		WHERE 
+				1=1 
+			<addif key="ThemeNo" > 
+            AND  theme_no = :ThemeNo 
+            </addif> 
+			<addif key="ThemeName" > 
+			AND theme_name1 like :ThemeName OR theme_name2 like :ThemeName
+			</addif>
+			<addif key="SoldFlg" > 
+            AND  sold_flg = :SoldFlg 
+            </addif> 
+			<addif key="GroupCode" > 
+			AND accounting_group_code = :GroupCode 
+			</addif>
+			<addif key="ObjectCode" > 
+			AND sales_object_code = :ObjectCode 
+			</addif>
+			
+	</query>
+	<query id="UpdateManhour">
+		
+		UPDATE	t_manhour
+	    SET		day1 = :Day1, day2 =:Day2, day3 = :Day3,day4 =:Day4,day5 = :Day5,day6 =:Day6,day7 = :Day7,day8 =:Day8,day9 = :Day9,day10 =:Day10,
+				day11 =:Day11, day12 =:Day12,day13 = :Day13,day14 =:Day14,day15 = :Day15,day16 =:Day16,day17 = :Day17,day18 =:Day18,day19 = :Day19,day20 =:Day20,
+				day21 =:Day21,day22 =:Day22,day23 =:Day23,day24 =:Day24,day25 =:Day25,day26 =:Day26,day27 =:Day27,day28 =:Day28,day29 =:Day29,day30 =:Day30,day31 =:Day31,
+				pin_flg =:Pin_flg,total =:Total, fix_date =:Fix_date
+		
+		WHERE
+				year = :Year
+			AND
+				month = :Month
+			AND
+				user_no = :User_no
+			AND
+				Theme_no = :Theme_no
+			AND
+				work_contents_class = :Work_contents_class
+			AND
+				work_contents_code = :Work_contents_code
+			AND
+				work_contents_detail = :Work_contents_detail
+	</query>
+
+	<query id="ChangeManhour">
+
+		UPDATE	t_manhour
+		SET		theme_no = :NewTheme_no, work_contents_class =:NewWork_contents_class,work_contents_code = :NewWork_contents_code
+				,work_contents_detail = :NewWork_contents_detail
+
+		WHERE
+				year = :Year
+				AND
+				month = :Month
+				AND
+				user_no = :User_no
+				AND
+				theme_no = :Theme_no
+				AND
+				work_contents_class = :Work_contents_class
+				AND
+				work_contents_code = :Work_contents_code
+				AND
+				work_contents_detail = :Work_contents_detail
+	</query>
+	<query id="UpdateManhourDay">
+		
+		UPDATE	t_manhour
+	    SET		{0} = :Day, pin_flg =:Pin_flg, total =:Total, fix_date =:Fix_date
+		
+		WHERE
+				year = :Year
+			AND
+				month = :Month
+			AND
+				user_no = :User_no
+			AND
+				Theme_no = :Theme_no
+			AND
+				work_contents_class = :Work_contents_class
+			AND
+				work_contents_code = :Work_contents_code
+			AND
+				work_contents_detail = :Work_contents_detail
+	</query>
+	<query id="UpdateManhourWeek">
+		
+		UPDATE	t_manhour
+	    SET		{0} = :Day1, {1} =:Day2, {2} = :Day3, {3} =:Day4, {4} = :Day5, {5} =:Day6, {6} = :Day7
+				,pin_flg =:Pin_flg,total =:Total, fix_date =:Fix_date
+		
+		WHERE
+				year = :Year
+			AND
+				month = :Month
+			AND
+				user_no = :User_no
+			AND
+				Theme_no = :Theme_no
+			AND
+				work_contents_class = :Work_contents_class
+			AND
+				work_contents_code = :Work_contents_code
+			AND
+				work_contents_detail = :Work_contents_detail
+	</query>
+	
+	<query id="DeleteManhour">
+		
+		DELETE FROM t_manhour
+		WHERE
+				year = :Year
+			AND
+				month = :Month
+			AND
+				user_no = :User_no
+			AND
+				Theme_no = :Theme_no
+			AND
+				work_contents_class = :Work_contents_class
+			AND
+				work_contents_code = :Work_contents_code
+			AND
+				work_contents_detail = :Work_contents_detail
+	</query>
+	
+	<query id="DeleteScreenItem">
+		
+		DELETE FROM m_user_screen_item
+		WHERE 
+			user_no = :UserNo
+			AND
+			screen_url = :ScreenUrl	
+	</query>
+	<query id="InsertScreenItem">
+		
+		INSERT INTO m_user_screen_item
+		VALUE(:Surrogate_key,:User_no,:Screen_url,:Screen_item,:ScreenInput,Save_name)
+	</query>
+
+	<query id="UpdateUserScreenItem">
+
+		UPDATE  m_user_screen_item
+		SET     screen_input =:ScreenInput
+		WHERE
+					screen_url =:ScreenUrl
+				AND 
+					user_no =:UserNo
+				AND 
+					screen_item = :ScreenItem
+	</query>
+
+	<query id="SelectGroupCode">
+
+		SELECT	  DISTINCT accounting_group_code, accounting_group_name
+		FROM	  m_group
+		ORDER BY  accounting_group_code
+
+	</query>
+
+	<query id="SelectWorkContent">
+
+		SELECT work_contents_class, work_contents_code, work_contents_code_name  
+		FROM			m_work_contents
+		ORDER BY		work_contents_code
+
+	</query>
+	<query id="UpdatePage">
+
+		UPDATE  m_user_screen_item
+		SET		screen_item = :ScreenItem
+		WHERE
+				screen_url =:ScreenUrl
+			AND 
+				user_no =:UserNo
+	</query>
+
+	<query id="SelectHorliday">
+
+		SELECT	DATE_PART('day', date)
+		FROM	m_calendar
+		WHERE
+				DATE_PART('year', date) = :Year
+				AND DATE_PART('month',date) = :Month
+				AND horiday = true
+				AND site_code =:SiteCode
+		ORDER BY DATE_PART('day', date)
+	</query>
+
+	<query id="UpdatePinTheme">
+
+		UPDATE  t_manhour
+		SET		pin_flg = false
+		WHERE
+					year = :Year
+				AND
+					month = :Month
+				AND
+					user_no = :User_no
+				AND
+					Theme_no = :Theme_no
+				AND
+					work_contents_class = :Work_contents_class
+				AND
+					work_contents_code = :Work_contents_code
+				AND
+					work_contents_detail = :Work_contents_detail
+	</query>
+
+	<query id="SelectByWorkClass">
+		SELECT work_contents_code,work_contents_code_name
+		FROM m_work_contents
+		WHERE work_contents_class =:Work_contents_class
+	</query>
+	
+
+</root>

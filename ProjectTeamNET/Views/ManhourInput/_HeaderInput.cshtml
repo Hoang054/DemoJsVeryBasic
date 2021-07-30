@@ -1,0 +1,45 @@
+﻿@model ProjectTeamNET.Models.Response.InitDataModel
+<!-- HeaderInput -->
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-1 pb-2 mb-3 border-bottom">
+    <h2 id="dateTitle">
+
+            @Model.DateSelect (@CommonFunction.GetJapaneseDayOfWeek(@Model.DateSelect))
+
+    </h2>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button class="btn btn-sm btn-outline-secondary mr-2"  onclick="exportCSV()"><i class="fas fa-file-export"></i> CSVダウンロード</button>
+        <button class="btn btn-sm btn-outline-secondary mr-4" onclick="save()"><i class="far fa-save"></i> 保存</button>
+        <div class="btn-group mr-2">
+            <button class="btn btn-sm btn-outline-secondary" onclick="gotoPrevious()"><i class="fa fa-chevron-left"></i></button>
+            <button id="btnNow" class="btn btn-sm btn-outline-secondary" onclick="gotoNow()">今日</button>
+            <button class="btn btn-sm btn-outline-secondary" onclick="gotoNext()"><i class="fa fa-chevron-right"></i></button>
+        </div>
+        <button class="btn btn-sm btn-outline-secondary mr-2" id="datepicker"><i class="far fa-calendar-alt"></i></button>
+        <div class="btn-group">
+            <button class="btn btn-sm btn-outline-secondary" id="btDay" name="Day" onclick="loadDay()">日</button>
+            <button class="btn btn-sm btn-outline-secondary" id="btWeek" name="Week" onclick="loadWeek()">週</button>
+            <button class="btn btn-sm btn-outline-secondary" id="btMonth" name="Month" onclick="loadMonth()">月</button>
+        </div>
+    </div>
+</div>
+<div class="row mb-2 align-items-center">
+    <div class="col-md-4 input-group">
+        <input type="text" class="form-control form-control-sm" placeholder="テーマ選択..." aria-label="..." aria-describedby="button-addon2" id="themeSelected1" readonly>
+        <div class="input-group-append">
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="loadSelectTheme()"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+    <div class="col-md-2 input-group pr-2">
+        <select id="workContentCode1" class="form-control form-control-sm">
+            <option disabled selected hidden>内容選択...</option>
+        </select>
+    </div>
+    <div class="col-md-2 input-group">
+        <input id="detailCode1" onchange="validDetailCode('detailCode1')" type="text" class="form-control form-control-sm" placeholder="内容詳細..." aria-label="..." aria-describedby="button-addon2">
+    </div>
+    <div class="col-md-4 pl-0">
+        <button onclick="addTheme()" class="btn btn-sm btn-outline-secondary mr-2"><i class="fas fa-arrow-down"></i> テーマ追加</button>
+    </div>
+</div>
+<!-- HeaderInput -->

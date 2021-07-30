@@ -1,0 +1,7 @@
+﻿<!ATTLIST addif key CDATA #REQUIRED prefix CDATA #IMPLIED>
+<!ATTLIST choose addStatement CDATA #IMPLIED>
+<!ATTLIST query id ID #REQUIRED>
+<!ELEMENT addif (#PCDATA) >
+<!ELEMENT choose (addif)+ >
+<!ELEMENT query (#PCDATA|addif|choose)* >
+<!ELEMENT root (query)+ >

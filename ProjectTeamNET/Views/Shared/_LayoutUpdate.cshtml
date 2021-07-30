@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Http
+@{
+    string userName1 = Context.Session.GetString("userName");
+    string roleCode = Context.Session.GetString("roleCode");
+}
+<!DOCTYPE html>
+<html lang="en">
+<!-- Head -->
+@await Html.PartialAsync("_Head.cshtml")
+<body>
+    <!-- Header-->
+    @await Html.PartialAsync("_Header.cshtml")
+    <!-- Render body-->
+    <div class="container-fluid">
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+
+    </div>
+
+    <!-- Script -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

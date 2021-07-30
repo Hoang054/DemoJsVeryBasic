@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ERR_001" xml:space="preserve">
+    <value>{0}の対象を選択してください</value>
+  </data>
+  <data name="ERR_002" xml:space="preserve">
+    <value>出力結果が{0}件を超えています。検索条件を絞り込んでください</value>
+  </data>
+  <data name="ERR_003" xml:space="preserve">
+    <value>{0}が重複しています</value>
+  </data>
+  <data name="ERR_004" xml:space="preserve">
+    <value>{0}の内容が正しくありません</value>
+  </data>
+  <data name="ERR_005" xml:space="preserve">
+    <value>該当データが存在しません</value>
+  </data>
+  <data name="ERR_006" xml:space="preserve">
+    <value>{0}は{1}のため削除できません</value>
+  </data>
+  <data name="ERR_007" xml:space="preserve">
+    <value>ファイルを指定してください</value>
+  </data>
+  <data name="ERR_008" xml:space="preserve">
+    <value>ファイルが存在しません</value>
+  </data>
+  <data name="ERR_009" xml:space="preserve">
+    <value>ファイルはCSV形式（拡張子csv）のみ可能です</value>
+  </data>
+  <data name="ERR_010" xml:space="preserve">
+    <value>ユーザNo、またはパスワードが無効です</value>
+  </data>
+  <data name="ERR_011" xml:space="preserve">
+    <value>期間は当月の日付のみ指定可能です</value>
+  </data>
+  <data name="ERR_012" xml:space="preserve">
+    <value>期間のFromとToの日付が逆転しています</value>
+  </data>
+  <data name="ERR_013" xml:space="preserve">
+    <value>日別合計を選択した場合、期間は１カ月(３１日)以内としてください</value>
+  </data>
+  <data name="ERR_014" xml:space="preserve">
+    <value>表示項目には所属、ユーザ、テーマ、作業内容、作業内容詳細のいずれか１つを選択してください</value>
+  </data>
+  <data name="ERR_015" xml:space="preserve">
+    <value>表示項目には全体合計、月別合計、日別合計のいずれか１つを選択してください</value>
+  </data>
+  <data name="ERR_016" xml:space="preserve">
+    <value>{0}月度の切替は既に実施済です</value>
+  </data>
+  <data name="ERR_017" xml:space="preserve">
+    <value>テーマNOの受注年(4,5桁目)と受付日の年が異なっています</value>
+  </data>
+  <data name="ERR_018" xml:space="preserve">
+    <value>１日の工数合計が２４ｈを超えることはできません</value>
+  </data>
+  <data name="ERR_019" xml:space="preserve">
+    <value>{0}は整数{1}桁まで、小数第{2}位までで入力してください</value>
+  </data>
+  <data name="ERR_020" xml:space="preserve">
+    <value>{0}はYYYYMM形式で入力してください</value>
+  </data>
+  <data name="ERR_021" xml:space="preserve">
+    <value>{0}月度の工数に未入力日があります。入力をお願いします</value>
+  </data>
+  <data name="ERR_022" xml:space="preserve">
+    <value>{0}が上限に達したので、登録できませんでした</value>
+  </data>
+  <data name="ERR_023" xml:space="preserve">
+    <value>内外販区分が正しくありません</value>
+  </data>
+  <data name="ERR_024" xml:space="preserve">
+    <value>{0}が必要です</value>
+  </data>
+  <data name="ERR_025" xml:space="preserve">
+    <value>グループユーザーは空にすることはできません</value>
+  </data>
+  <data name="ERR_026" xml:space="preserve">
+    <value>名前の保存が必要で、&lt;= 40文字</value>
+  </data>
+  <data name="INF_001" xml:space="preserve">
+    <value>{0}が正常終了しました</value>
+  </data>
+  <data name="WAR_001" xml:space="preserve">
+    <value>{0}します。よろしいですか？</value>
+  </data>
+  <data name="WAR_002" xml:space="preserve">
+    <value>入力内容が更新されていませんが画面を切替えてよろしいですか？</value>
+  </data>
+  <data name="WAR_003" xml:space="preserve">
+    <value>合計工数が８ｈ末満です</value>
+  </data>
+  <data name="WAR_004" xml:space="preserve">
+    <value>工数が未入力です</value>
+  </data>
+  <data name="WAR_005" xml:space="preserve">
+    <value>売上済のテーマです。テーマを追加しますか？</value>
+  </data>
+  <data name="WAR_006" xml:space="preserve">
+    <value>{0}の月度切替をします。 当月データは前月分として繰越され、元に戻せなくなります。よろしいですか？</value>
+  </data>
+  <data name="WAR_007" xml:space="preserve">
+    <value>保存前ですが処理を続行しますか？</value>
+  </data>
+</root>

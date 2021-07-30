@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root SYSTEM "Query.dtd">
+
+<root>
+	<!-- メニュー情報取得 -->
+	<query id="SelectWorkContents">
+		<![CDATA[
+		select * from m_work_contents order by work_contents_code 
+    ]]>
+	</query>
+
+	<query id="SelectManhourData">
+		<![CDATA[
+		SELECT
+			t1.*,t2.theme_name1,t2.theme_name2,t3.work_contents_code,t3.work_contents_code_name
+		FROM 
+				t_manhour t1
+			JOIN m_theme t2
+			ON t1.theme_no = t2.theme_no 
+			JOIN m_work_contents t3 
+			ON t3.work_contents_class = t1.work_contents_class
+		WHERE 
+				t1.year = 2021
+			AND t1.month = 7
+			AND t1.user_no = '01'
+
+		ORDER BY 
+			t2.theme_no
+	]]>
+	</query>
+	<query id ="SelectWorkHourOfMonth">
+		select * from (SELECT MH.user_no, MH.Day1,MH.Day2,MH.Day3,MH.Day4,MH.Day5,MH.Day6,MH.Day7,MH.Day8,MH.Day9,MH.Day10,MH.Day11,MH.Day12,MH.Day13,MH.Day14,MH.Day15,MH.Day16,MH.Day17,MH.Day18,MH.Day19,MH.Day20,MH.Day21,MH.Day22,MH.Day23,MH.Day24,MH.Day25,MH.Day26,MH.Day27,MH.Day28,MH.Day29,MH.Day30,MH.Day31
+		,Case WHEN MH.month &gt;= 0 AND MH.month &lt;= 9
+		THEN concat(MH.year,'0',MH.month )
+		WHEN MH.month &gt;= 10
+		Then concat(MH.year,Cast(MH.month as text) )
+		END as duration
+		FROm public.t_manhour as MH) as tem
+		INNER Join public.m_processing_month as pm On duration = pm.processing_month
+		WHERE tem.user_no = user_no
+		<addif key="user_no" >
+			AND tem.user_no = :user_no
+		</addif>
+		ORDER BY tem.user_no ASC
+		LIMIT 1
+
+	</query>
+	<query id ="GetHoliday">
+		SELECT * FROM (SELECT
+		DISTINCT(cal.date),
+		cal.horiday,
+		u.user_no,
+		u.site_code,
+		date_part('year', cal.date)  as YearConver,
+		date_part('month', cal.date)  as MonthConver
+		FROM public.m_calendar as cal
+		Join public.m_user as U ON U.site_code = cal.site_code) as tem
+		WHERE
+		1 = 1
+		<addif key="user_no" >
+			AND tem.user_no =:user_no
+		</addif>	
+		<addif key="YearConver" >
+			AND tem.YearConver =:currentYear
+		</addif>	
+		<addif key="MonthConver" >
+			AND tem.MonthConver =:currentMonth
+		</addif>
+
+	</query>
+	<query id ="GetWorkHourOfMonth">
+		SELECT * FROM public.t_manhour as MH
+		WHERE 
+		1 = 1 
+		<addif key="user_no" >
+		   AND	MH.user_no = :user_no
+		</addif>		
+		<addif key="year" >
+			AND MH.year = :year
+		</addif>		
+		<addif key="month" >
+			AND MH.month = :month
+		</addif>
+
+	</query>
+	<query id ="GetUserInfo">
+		SELECT
+		 U.user_no
+		,U.role_code
+		,U.site_code
+		,U.group_code
+		FROM
+		public.m_user as U
+		WHERE		
+		<addif key="user_no" >
+			U.user_no = :user_no
+		</addif>
+	</query>
+</root>

@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE root SYSTEM "Query.dtd">
+
+<root>
+	<!-- メニュー情報取得 -->
+	<query id="SelectCompany">
+		<![CDATA[
+	select company_name As name from m_company
+    ]]>
+	</query>
+
+	<query id="GroupName">
+		<![CDATA[
+		select group_code, concat(group_code, '[',group_name, '  ', accounting_group_name,']') As GroupName from m_group
+		]]>
+	</query>
+	
+	<query id="queryManReport">
+		select
+           mh.year as Year
+			, mh.month as Month
+			, mh.user_no as UserCode
+			, u.user_name as UserName
+			, mh.group_code as GroupCode 
+			, gr.group_name as GroupName
+			, mh.theme_no as ThemeCode
+			, th.theme_name1 as ThemeName
+			, mh.work_contents_code as WorkContentCode
+			, mh.work_contents_detail as WorkContentDetail
+			, wc.work_contents_code_name as WorkContentCodeName
+        from
+            public.t_manhour as mh join public.m_theme as th 
+                on mh.theme_no = th.theme_no join public.m_group as gr 
+                on gr.group_code = mh.group_code join public.m_user as u 
+                on u.user_no = mh.user_no join public.m_work_contents wc 
+                on wc.work_contents_code = mh.work_contents_code and wc.work_contents_class = mh.work_contents_class
+        where
+		1=1
+		<addif key ="More2YearDiffrence">
+			and ((mh.year = :fromYear and mh.month &gt;= :fromMonth) or (mh.year = :toYear and mh.month &lt;= :toMonth) or (mh.year BETWEEN :fromYear +1 AND :toYear -1))
+		</addif>
+		<addif key ="More1YearDiffrence">
+			and ((mh.year = :fromYear and mh.month &gt;= :fromMonth) or (mh.year = :toYear and mh.month &lt;= :toMonth))
+		</addif>
+		<addif key ="SameYear">
+			and mh.year = :toYear and (mh.month BETWEEN :fromMonth AND :toMonth)
+		</addif>
+		<addif key ="Group_User">
+			and :user = mh.user_no and :groupCode = mh.group_code
+		</addif>
+		<addif key ="Theme_WorkContent">
+			and :workThemeContent LIKE '%' || CONCAT(mh.theme_no, mh.work_contents_code, mh.work_contents_detail) || '%'
+		</addif>
+		<addif key ="Theme_WorkContent_nodetail">
+			and :workThemeContent LIKE '%' || CONCAT(mh.theme_no, mh.work_contents_code) || '%'
+		</addif>
+			
+	</query>
+
+</root>

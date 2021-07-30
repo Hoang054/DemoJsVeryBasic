@@ -1,0 +1,24 @@
+﻿@model int
+<div class="form-group row themeadd" id="Theme_@Model">
+    <label class="col-form-label col-md-2"></label>
+    <div class="col-md-10">
+        <div class="row align-items-center">
+            <div class="col-md-4 input-group pl-0">
+                <input type="text" class="form-control form-control-sm" placeholder="テーマ選択..." aria-label="..." aria-describedby="button-addon2" id="theme_@Model" readonly>
+                <div class="input-group-append">
+                    <button type="button" id="button-addtheme_@Model" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#Modal_@Model"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <div class="col-md-2 input-group pr-2">
+                <select class="form-control form-control-sm" id="addWorkContent_@Model">
+                </select>
+            </div>
+            <div class="col-md-2 input-group">
+                <input type="number" class="form-control form-control-sm" id="addWorkDetail_@Model" placeholder="内容詳細..." aria-label="..." aria-describedby="button-addon2"  min="00" max="99">
+            </div>
+            <div class="col-md-4 input-group pl-0">
+                <i class="far fa-trash-alt" onclick="deleteTheme(@Model)"></i>
+            </div>
+        </div>
+    </div>
+</div>

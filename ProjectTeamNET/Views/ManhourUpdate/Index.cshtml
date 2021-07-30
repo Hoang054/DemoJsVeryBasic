@@ -1,0 +1,236 @@
+﻿@inject ProjectDbContext context;
+@model ProjectTeamNET.Models.Response.ManhourUpdate;
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutUpdate.cshtml";
+    string group = Model.groupId;
+    string user = Model.userId;
+
+}
+<link href="~/css/ManhourUpdate.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="row">
+        <main role="main" class="container-fluid px-4">
+            <div id="success"></div>
+            <div id="warningDay">
+            </div>
+            <div id="warningCSV">
+            </div>
+            <div id="warningSave">
+            </div>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-1 pb-2 mb-3 border-bottom">
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <div class="input-group date">
+                            <input type="text" class="form-control form-control-sm" value="@Model.today" readonly id="month" />
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        @Html.DropDownListFor(Model => Model.groups,
+                            new SelectList(Model.groups, "Value", "Text"),
+                            new { @class = "form-control form-control-sm selectGroup" })
+                    </div>
+                    <div class="col-auto">
+                        @Html.DropDownListFor(Model => Model.users,
+                            new SelectList(Model.users, "Value", "Text"),
+                            new { @class = "form-control form-control-sm selectUser" })
+                    </div>
+                    <div class="col-auto">
+                        <button id="manhourSesrch" class="btn btn-sm btn-outline-secondary mr-4" onclick="search()"><i class="fas fa-search"></i> 検索</button>
+                    </div>
+                </div>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <button id="ExportCsv" class="btn btn-sm btn-outline-secondary mr-2"><i class="fas fa-file-download"></i> CSVダウンロード</button>
+                    <form asp-controller="ManhourUpdate" asp-action="ImportCSV" method="post" enctype="multipart/form-data" id="formImport">
+                        <input id="fileCSVimport" type="file" name="Csv" style="display:none;" />
+                    </form>
+                    <button id="import" class="btn btn-sm btn-outline-secondary mr-2" onclick=" document.getElementById('fileCSVimport').click();"><i class="fas fa-file-upload"></i> CSVアップロード</button>
+                    <button class="btn btn-sm btn-outline-secondary mr-2" id="btSave"><i class="far fa-save"></i> 保存</button>
+                </div>
+            </div>
+            <div class="row mb-2 align-items-center">
+                <div class="col-md-4 input-group">
+                    <input type="text" id="theme" class="form-control form-control-sm" placeholder="テーマ選択..." aria-label="..." aria-describedby="button-addon2" readonly>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="loadSelectTheme()"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                <div class="col-md-2 input-group pr-2">
+                    <select id="workContentCode1" class="form-control form-control-sm">
+                        <option>内容選択...</option>
+                    </select>
+                </div>
+                <div class="col-md-2 input-group">
+                    <input type="text" id="workContentDetail" class="form-control form-control-sm" placeholder="内容詳細..." aria-label="..." aria-describedby="button-addon2">
+                </div>
+                <div class="col-md-4 pl-0">
+                    <button id="addTheme" class="btn btn-sm btn-outline-secondary mr-2"><i class="fas fa-arrow-down"></i> テーマ追加</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-sm">
+                    <thead class="thead-light" id="thead">
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                    <tfoot id="tfoot">
+                    </tfoot>
+                </table>
+            </div>
+            <!-- Modal1 -->
+            <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="label1">テーマ追加</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>テーマNo</label>
+                                            <input type="text" class="form-control form-control-sm" id="themeNo">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>テーマ名</label>
+                                            <input type="text" class="form-control form-control-sm" id="themeName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>担当部門</label>
+                                            @Html.DropDownListFor(Model => Model.groupThemes,
+                                               new SelectList(Model.groupThemes, "Value", "Text"), "部門選択...",
+                                               new { @class = "form-control form-control-sm selectGroup" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>担当部門</label>
+                                            @Html.DropDownListFor(Model => Model.salesObject,
+                                               new SelectList(Model.salesObject, "Value", "Text"), "部門選択...",
+                                               new { @class = "form-control form-control-sm selectGroup" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>売上状況</label>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option2" checked>
+                                                    <label class="form-check-label">未売上</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option3">
+                                                    <label class="form-check-label">売上済</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option1">
+                                                    <label class="form-check-label">全て</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <button type="button" class="btn btn-primary mt-2 mb-2" id="searchTheme">検索</button>
+                                </div>
+                                <div class="row">
+                                    <div class="table-responsive table-theme">
+                                        <table class="table table-striped table-sm">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th></th>
+                                                    <th>テーマNo</th>
+                                                    <th>テーマ名</th>
+                                                    <th>売上状況</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="slThemeBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                            <button type="button" class="btn btn-primary"  onclick="choiceTheme()">追加</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <!-- Modal3 -->
+            <div class="modal fade" id="modal3" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="label1">テーマ変更</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-2">
+                                <div class="col-md-6 input-group">
+                                    <input id="modalThemeNo" type="text" class="form-control form-control-sm col-md-4" value="" readonly>
+                                    <input id="modalThemeName" type="text" class="form-control form-control-sm col-md-8" value="" readonly>
+                                </div>
+                                <div class="col-md-6 input-group">
+                                    <input id="modalWC" type="text" class="form-control form-control-sm col-md-12" value="" readonly>
+                                    <input id="modalDetail" type="text" class="form-control form-control-sm col-md-12" value="" readonly="">
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-center mb-2">
+                                <span><i class="fas fa-arrow-down"></i></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 input-group">
+                                    <input id="themeSelected2" type="text" class="form-control form-control-sm" placeholder="テーマ選択..." aria-label="..." aria-describedby="button-addon2" readonly>
+                                    <div class="input-group-append">
+                                        <button type="button" id="button-addon2" class="btn btn-sm btn-outline-secondary" onclick="loadSelectTheme()"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 input-group pr-2">
+                                    <select id="workContentCode2" class="form-control form-control-sm">
+                                        <option>内容選択...</option>
+                                    </select>                                    
+                                </div>
+                                <div class="col-md-3 input-group pr-2">
+                                    <input type="text" class="form-control form-control-sm" id="detailCode2" placeholder="内容詳細..." aria-label="..." aria-describedby="button-addon2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+                            <button type="button" class="btn btn-primary" id="btnChange">変更</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+
+        </main>
+    </div>
+</div>
+@section scripts{
+    <script>
+        var userNo = '@HttpContextAccessor.HttpContext.Session.GetString("userNo")';
+        var group = '@HttpContextAccessor.HttpContext.Session.GetString("groupCode")';
+        var siteCode = '@HttpContextAccessor.HttpContext.Session.GetString("siteCode")';
+        document.getElementById('groups').value = "@group";
+        document.getElementById('users').value = "@user";
+    </script>
+    <script src="~/js/manhourUpdate.js"></script>
+}

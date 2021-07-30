@@ -1,0 +1,182 @@
+﻿@model MenuViewModel
+@{
+    ViewData["Title"] = "メニュー";
+    DateTime startDate = new DateTime(Model.processingMonth.Year, Model.processingMonth.Month, 1);
+    var daysOfMonth = DateTime.DaysInMonth(startDate.Year, startDate.Month); // get how many day from processing Month , return int
+    DateTime today = DateTime.Now;
+    int currentMonth = Model.processingMonth.Month; // is Processing Month not Current Month in PC
+    int currentYear = Model.processingMonth.Year; // is Processing Year not Current Year in PC
+    int startIndex = (int)startDate.DayOfWeek; // start (index) from calendar (index 0 = sunday)
+    int dayNo = 0;
+
+    // if this month has total index > 35, using this for loop
+    int row = daysOfMonth + startIndex;
+    if (row > 35)
+    {
+        row = 42;
+    }
+    else
+    {
+        row = 35;
+    }
+}
+<link href="~/css/Menu.css" rel="stylesheet" />
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<div class="container-fluid">
+
+    <div class="row">
+        <div id="calendar"></div>
+    </div>
+
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky">
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-2 mb-1 text-muted">
+                    <span>利用者メニュー</span>
+                </h6>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-sub active" href="/ManhourInput">
+                            <span class="fa fa-clock"></span> 工数入力 <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-sub" href="#">
+                            <span class="fa fa-check"></span> 工数未入力チェック
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-sub" href="/ManhourReport">
+                            <span class="fas fa-file-export"></span> 工数集計
+                        </a>
+                    </li>
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>マスターメンテナンス</span>
+                </h6>
+
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-sub" href="#">
+                            <span class="fas fa-edit"></span> テーマ管理
+                        </a>
+                    </li>
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>管理者メニュー</span>
+                </h6>
+
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item sidebar-sub">
+                        <a class="nav-link" href="/ManhourUpdate">
+                            <span class="fa fa-clock"></span> 工数修正
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-sub" href="#">
+                            <span class="fas fa-edit"></span> 月度切替
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link sidebar-sub" href="#">
+                            <span class="fas fa-file-export"></span> 原価計算データ出力
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            @if (Model.check == false) //if not yet complete input or error
+            {
+                <div class="alert alert-warning mb-2" role="alert">
+                    <strong>アラート</strong> -@currentMonth 月度の工数に未入力日があります！入力をお願いします。
+                </div>
+            }
+            <div class="row p-3">
+                <table class="table table-bordered" id="dataTable">
+                    <tbody>
+                        <tr>
+                            <td class="" colspan="7"><div class="h6 text-center m-0">@currentYear 年 @currentMonth 月</div></td>
+                        </tr>
+                        <tr>
+                            <td style="width:14%">日</td>
+                            <td style="width:14%">月</td>
+                            <td style="width:14%">火</td>
+                            <td style="width:14%">水</td>
+                            <td style="width:14%">木</td>
+                            <td style="width:14%">金</td>
+                            <td style="width:14%">土</td>
+                        </tr>
+
+                        <tr class="calendar-row">
+                            @for (var i = 0; i < row; i++)
+                            {
+                                if (startIndex > i)
+                                {
+                                    <td><a class="h5"></a></td>
+                                    continue;
+                                }
+
+                                dayNo = i - startIndex + 1;
+
+                                if (i % 7 == 0 && i > 0)
+                                {
+                                @:</tr><tr class="calendar-row">
+                                }
+                                if (dayNo <= daysOfMonth)
+                                {   // check key Dictionary Holiday is exist or not and value isHoliday?
+                                    if (Model.holidays.ContainsKey(dayNo + 1) && Model.holidays[dayNo])
+                                    {
+                                        //if holiday is true
+                                        <td style="color: red" data-value="@currentYear/@currentMonth/@dayNo"><a class="h5" style="color:red">@dayNo</a><p class="workHours">0h</p></td>
+
+                                    }
+                                    else
+                                    {
+                                        if ((int)today.Day > (int)dayNo)
+                                        {   //case workHour < 8
+                                            if (Model.totalWorkHour[dayNo - 1] > 0 && Model.totalWorkHour[dayNo - 1] < 8)
+                                            {
+                                                <td data-value="@currentYear/@currentMonth/@dayNo"><a class="h5">@dayNo</a><span class="badge badge-warning">入力エラー</span><p class="workHours"><i class="fas fa-exclamation-circle text-warning" data-toggle="tooltip"></i>@Model.totalWorkHour[dayNo - 1]h</p></td>                                                
+                                            }
+                                            // case not yet input workHour
+                                            else if (Model.totalWorkHour[dayNo - 1] == 0)
+                                            {
+                                                <td data-value="@currentYear/@currentMonth/@dayNo"><a class="h5" >@dayNo</a><span class="badge badge-danger">未入力</span><p class="workHours"><i class="fas fa-exclamation-circle text-danger" data-toggle="tooltip" title="" data-original-title="工数が未入力です"></i>@Model.totalWorkHour[dayNo - 1]h</p></td>
+                                            }
+                                            //case no problem
+                                            else
+                                            {
+                                                <td data-value="@currentYear/@currentMonth/@dayNo"><a class="h5" >@dayNo</a><p class="workHours">@Model.totalWorkHour[dayNo - 1]h</p></td>
+                                            }
+                                        }
+                                        else if ((int)today.Day == (int)dayNo)
+                                        {   // is Today
+                                            <td data-value="@currentYear/@currentMonth/@dayNo" style="background-color: lightblue;"><a class="h5" >@dayNo</a><p class="workHours">0h</p></td>
+                                        }
+                                        else
+                                        {
+                                            <td data-value="@currentYear/@currentMonth/@dayNo"><a class="h5" >@dayNo</a><p class="workHours">0h</p></td>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <td style="color: gray" data-value="@currentYear/@currentMonth/@dayNo"><a class="h5" ></a></td>
+                                }
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+</div>
+<script src="~/js/Menu.js">
+</script>
+
